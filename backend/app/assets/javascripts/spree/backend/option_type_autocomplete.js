@@ -2,42 +2,39 @@ $(document).ready(function () {
   'use strict';
 
   function formatOptionType(option_type) {
-    return Select2.util.escapeMarkup(option_type.presentation + ' (' + option_type.name + ')');
+    if(option_type.loading || option_type.selected) {
+      return option_type.text;
+    } else {
+      return option_type.presentation + ' (' + option_type.name + ')';
+    }
   }
 
   if ($('#product_option_type_ids').length > 0) {
     $('#product_option_type_ids').select2({
       placeholder: Spree.translations.option_type_placeholder,
       multiple: true,
-      initSelection: function (element, callback) {
-        var url = Spree.url(Spree.routes.option_type_search, {
-          ids: element.val(),
-          token: Spree.api_key
-        });
-        return $.getJSON(url, null, function (data) {
-          return callback(data);
-        });
-      },
       ajax: {
         url: Spree.routes.option_type_search,
         quietMillis: 200,
         datatype: 'json',
-        data: function (term) {
+        data: function (params) {
           return {
-            q: {
-              name_cont: term
-            },
+            q: params.term,
             token: Spree.api_key
           };
         },
-        results: function (data) {
+        processResults: function (data, params) {
+          params.page = params.page || 1;
+
           return {
             results: data
           };
         }
       },
-      formatResult: formatOptionType,
-      formatSelection: formatOptionType
+      escapeMarkup: function (markup) { return markup; },
+      minimumInputLength: 0,
+      templateResult: formatOptionType,
+      templateSelection: formatOptionType
     });
   }
 });

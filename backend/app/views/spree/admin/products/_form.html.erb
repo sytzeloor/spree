@@ -162,13 +162,7 @@
       <%= f.label :taxon_ids, Spree.t(:taxons) %>
 
       <% if can? :modify, Spree::Classification %>
-        <%= f.hidden_field :taxon_ids, value: @product.taxon_ids.join(',') %>
-      <% elsif @product.taxons.any? %>
-        <ul class="text_list">
-          <% @product.taxons.each do |taxon| %>
-            <li><%= taxon.name %></li>
-          <% end %>
-        </ul>
+        <%= f.collection_select(:taxon_ids, @product.taxons, :id, :pretty_name) %>
       <% else %>
         <div class="alert alert-info"><%= Spree.t(:no_resource_found, resource: :taxons) %></div>
       <% end %>
@@ -181,13 +175,7 @@
       <%= f.label :option_type_ids, Spree.t(:option_types) %>
 
       <% if can? :modify, Spree::OptionType %>
-        <%= f.hidden_field :option_type_ids, value: @product.option_type_ids.join(',') %>
-      <% elsif @product.option_types.any? %>
-        <ul class="text_list">
-          <% @product.option_types.each do |type| %>
-            <li><%= type.presentation %> (<%= type.name %>)</li>
-          <% end %>
-        </ul>
+        <%= f.collection_select(:option_type_ids, @product.option_types, :id, proc { |o| "#{o.presentation} (#{o.name})" }) %>
       <% else %>
         <div class="alert alert-info"><%= Spree.t(:no_resource_found, resource: :option_types) %></div>
       <% end %>

@@ -2,23 +2,17 @@
 
 var set_taxon_select = function(selector){
   function formatTaxon(taxon) {
-    return Select2.util.escapeMarkup(taxon.pretty_name);
+    if(taxon.loading || taxon.selected) {
+      return taxon.text;
+    } else {
+      return taxon.pretty_name;
+    }
   }
 
   if ($(selector).length > 0) {
     $(selector).select2({
       placeholder: Spree.translations.taxon_placeholder,
       multiple: true,
-      initSelection: function (element, callback) {
-        var url = Spree.url(Spree.routes.taxons_search, {
-          ids: element.val(),
-          without_children: true,
-          token: Spree.api_key
-        });
-        return $.getJSON(url, null, function (data) {
-          return callback(data['taxons']);
-        });
-      },
       ajax: {
         url: Spree.routes.taxons_search,
         datatype: 'json',
@@ -33,16 +27,21 @@ var set_taxon_select = function(selector){
             token: Spree.api_key
           };
         },
-        results: function (data, page) {
-          var more = page < data.pages;
+        processResults: function (data, params) {
+          params.page = params.page || data.current_page;
+
           return {
-            results: data['taxons'],
-            more: more
+            results: data.taxons,
+            pagination: {
+              more: (params.page * 30) < data.count
+            }
           };
         }
       },
-      formatResult: formatTaxon,
-      formatSelection: formatTaxon
+      escapeMarkup: function (markup) { return markup; },
+      minimumInputLength: 0,
+      templateResult: formatTaxon,
+      templateSelection: formatTaxon
     });
   }
 }
