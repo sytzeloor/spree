@@ -1,21 +1,22 @@
 <script type='text/template' id='variant_autocomplete_template'>
-  <div class='variant-autocomplete-item media'>
-    <figure class='variant-image media-left'>
-      {{#if variant.image }}
-        <img src='{{variant.image}}' class="thumbnail no-marginb" />
-      {{ else }}
-        <img src='<%= image_path("noimage/mini.png") %>' class="thumbnail no-marginb" />
-      {{/if}}
-    </figure>
-
-    <div class='variant-details media-body'>
-      <h5 class="variant-name media-heading">{{variant.name}}</h5>
-      {{#if variant.option_values}}
-        {{#each variant.option_values}}
-          <strong>{{this.option_type_presentation}}:</strong> {{this.presentation}}<br/>
-        {{/each}}
-      {{/if}}
-      <strong><%= Spree.t(:sku) %>:</strong> {{variant.sku}}
+  <div class='variant-autocomplete-item'>
+    <div class='row'>
+      <figure class='variant-image col-xs-3'>
+        {{#if variant.image }}
+          <img src='{{variant.image}}' class="thumbnail no-marginb img-responsive" />
+        {{ else }}
+          <img src='<%= image_path("noimage/mini.png") %>' class="thumbnail no-marginb img-responsive" />
+        {{/if}}
+      </figure>
+      <div class='variant-details col-xs-9'>
+        <h5 class="variant-name media-heading">{{variant.name}}</h5>
+        {{#if variant.option_values}}
+          {{#each variant.option_values}}
+            <strong>{{this.option_type_presentation}}:</strong> {{this.presentation}}<br/>
+          {{/each}}
+        {{/if}}
+        <strong><%= Spree.t(:sku) %>:</strong> {{variant.sku}}
+      </div>
     </div>
   </div>
 </script>
