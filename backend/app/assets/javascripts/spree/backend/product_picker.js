@@ -6,20 +6,25 @@ $.fn.productAutocomplete = function (options) {
   var multiple = typeof(options.multiple) !== 'undefined' ? options.multiple : true;
 
   function formatProduct(product) {
-    return Select2.util.escapeMarkup(product.name);
+    if(product.loading || product.selected) {
+      return product.text;
+    } else {
+      return product.name;
+    }
   }
 
   this.select2({
+    width: 'element',
     minimumInputLength: 3,
     multiple: multiple,
-    initSelection: function (element, callback) {
-      $.get(Spree.routes.product_search, {
-        ids: element.val().split(','),
-        token: Spree.api_key
-      }, function (data) {
-        callback(multiple ? data.products : data.products[0]);
-      });
-    },
+    // inputData: function (element, callback) {
+    //   $.get(Spree.routes.product_search, {
+    //     ids: element.val().split(','),
+    //     token: Spree.api_key
+    //   }, function (data) {
+    //     callback(multiple ? data.products : data.products[0]);
+    //   });
+    // },
     ajax: {
       url: Spree.routes.product_search,
       datatype: 'json',
@@ -32,15 +37,17 @@ $.fn.productAutocomplete = function (options) {
           token: Spree.api_key
         };
       },
-      results: function (data, page) {
+      processResults: function (data, params) {
         var products = data.products ? data.products : [];
+
         return {
           results: products
         };
       }
     },
-    formatResult: formatProduct,
-    formatSelection: formatProduct
+    escapeMarkup: function (markup) { return markup; },
+    templateResult: formatProduct,
+    templateSelection: formatProduct
   });
 };
 

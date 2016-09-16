@@ -23,3 +23,7 @@ body {
 .alert-error {
   @extend .alert-danger;
 }
+
+.select2-selection.select2-selection--single {
+  height: auto !important;
+}

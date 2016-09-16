@@ -303,9 +303,11 @@ addVariantFromStockLocation = function(event) {
 
   $('#stock_details').hide();
 
-  var variant_id = $('input.variant_autocomplete').val();
+  var variant_id = $('select.variant_autocomplete option:last').attr('value');
   var stock_location_id = $(this).data('stock-location-id');
   var quantity = $("input.quantity[data-stock-location-id='" + stock_location_id + "']").val();
+
+  console.log(order_number, stock_location_id, variant_id, quantity);
 
   var shipment = _.find(shipments, function(shipment){
     return shipment.stock_location_id == stock_location_id && (shipment.state == 'ready' || shipment.state == 'pending');

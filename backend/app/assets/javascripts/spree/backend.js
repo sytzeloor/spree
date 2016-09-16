@@ -8,7 +8,7 @@
 //= require jquery-ui/datepicker
 //= require jquery-ui/sortable
 //= require jquery-ui/autocomplete
-//= require select2
+//= require select2-full
 //= require underscore-min.js
 //= require velocity
 
